@@ -2,6 +2,7 @@ const { glob } = require("glob");
 const { promisify } = require("util");
 const { Client } = require("discord.js");
 const mongoose = require("mongoose");
+const giveRoles = require("../SlashCommands/info/give-roles");
 
 const globPromise = promisify(glob);
 

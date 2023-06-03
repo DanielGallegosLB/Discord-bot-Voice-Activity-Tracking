@@ -1,7 +1,7 @@
-const { Client, Collection } = require("discord.js");
+const { Client, Collection} = require("discord.js");
 
 const client = new Client({
-    intents: 32767,
+    intents: 3276799, //32767
 });
 module.exports = client;
 
