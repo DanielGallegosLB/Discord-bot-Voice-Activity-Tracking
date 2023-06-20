@@ -52,6 +52,8 @@ module.exports = async (client) => {
         await client.application.commands.set(arrayOfSlashCommands);
     });
 
+    // Registrar actividad de voz cada dia y guardar en mongodb
+
     // mongoose
     const { mongooseConnectionString } = require('../config.json')
     if (!mongooseConnectionString) return;

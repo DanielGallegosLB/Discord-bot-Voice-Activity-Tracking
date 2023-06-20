@@ -6,4 +6,5 @@ client.on("ready", () => {
 
     // Set the client user's activity
     client.user.setActivity('mi desarrollo!', { type: 'WATCHING' });
+    
 });

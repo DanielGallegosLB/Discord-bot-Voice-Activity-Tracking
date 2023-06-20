@@ -37,10 +37,11 @@ module.exports = {
          let voz2role = serverGuild.roles.cache.find(role => role.name === '🎇Voz [2+hr]');
          let voz5role = serverGuild.roles.cache.find(role => role.name === '💫Voz [5+hrs]');
          let voz30role = serverGuild.roles.cache.find(role => role.name === '✨Voz [30+hrs]');
-         let voz50role = serverGuild.roles.cache.find(role => role.name === '🌟Voz [50+hrs]');
+         let voz50role = serverGuild.roles.cache.find(role => role.name === '⭐Voz [50+hrs]');
+         let voz100role = serverGuild.roles.cache.find(role => role.name === '🌟Voz [100+hrs]');
+         let voz200role = serverGuild.roles.cache.find(role => role.name === '🌟🌟Voz [200+hrs]');
 
          // Recorrer cada usuario
-         
          await cursors.forEach(cursor => {
             // obtener el usuario
             member = serverGuild.members.cache.get(cursor.User)
@@ -52,24 +53,44 @@ module.exports = {
                 member.roles.remove(voz5role);
                 member.roles.remove(voz30role);
                 member.roles.remove(voz50role);
+                member.roles.remove(voz100role);
             } else if (cursor.Time >= cincoHoras && cursor.Time < treintaHoras){
                 member.roles.add(voz5role);
                 console.log(`Se añade ${voz5role.name} a ${member.displayName}`)
                 member.roles.remove(voz2role);
                 member.roles.remove(voz30role);
                 member.roles.remove(voz50role);
+                member.roles.remove(voz100role);
             } else if (cursor.Time >= treintaHoras && cursor.Time < cincuentaHoras){
                 member.roles.add(voz30role);
                 console.log(`Se añade ${voz30role.name} a ${member.displayName}`)
                 member.roles.remove(voz2role);
                 member.roles.remove(voz5role);
                 member.roles.remove(voz50role);
-            } else if (cursor.Time >= cincuentaHoras ){
+                member.roles.remove(voz100role);
+            } else if (cursor.Time >= cincuentaHoras && cursor.Time < cienHoras){
                 member.roles.add(voz50role);
                 console.log(`Se añade ${voz50role.name} a ${member.displayName}`)
                 member.roles.remove(voz2role);
                 member.roles.remove(voz5role);
                 member.roles.remove(voz30role);
+                member.roles.remove(voz100role);
+            } else if (cursor.Time >= cienHoras && cursor.Time < docientasHoras ){ 
+                member.roles.add(voz100role);
+                console.log(`Se añade ${voz100role.name} a ${member.displayName}`)
+                member.roles.remove(voz2role);
+                member.roles.remove(voz5role);
+                member.roles.remove(voz30role);
+                member.roles.remove(voz50role);
+                member.roles.remove(voz200role);
+            } else if (cursor.Time >= docientasHoras ){
+                member.roles.add(voz200role);
+                console.log(`Se añade ${voz200role.name} a ${member.displayName}`)
+                member.roles.remove(voz2role);
+                member.roles.remove(voz5role);
+                member.roles.remove(voz30role);
+                member.roles.remove(voz50role);
+                member.roles.remove(voz100role);
             } else {
                 console.log(`No se añade rol a ${member.displayName}`)
             }            
@@ -79,6 +100,15 @@ module.exports = {
     },
 };
 
+/*
+                    Dar roles a usuarios que cumplan con las horas de voz en el mes
+Cada dia a las 00:00:00 se leeran los datos de voz de cada usuario 
+y se guardaran en otra base de datos con datos de usuario y cantidad de voz registrada  en la base de datos 
+Cada día a las 00:00:00 se daran los roles a los usuarios que cumplan con las horas de voz en el mes
+
+                    
+
+*/
 
 /*
 // Schema
