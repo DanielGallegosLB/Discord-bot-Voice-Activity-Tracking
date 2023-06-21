@@ -1,19 +1,10 @@
 const { Client, CommandInteraction, User } = require("discord.js");
-const voiceClient = require('../../Client/VoiceClient.js');
-const { mongooseConnectionString } = require('../../config.json')
+const { mongooseConnectionString } = require('../config.json')
 const {MongoClient} = require("mongodb");
+const client = require("../index");
 
 module.exports = {
-    name: "dar-roles",
-    description: "Da los roles a los usuarios que cumplan con las horas de voz",
-    type: 'CHAT_INPUT',
-    /**
-     *
-     * @param {Client} client
-     * @param {CommandInteraction} interaction
-     * @param {String[]} args
-     */
-    run: async (client, interaction, args) => {
+        async assignRoles(client){
         dosHoras = 7200000
         cincoHoras = 18000000 
         treintaHoras = 108000000 
@@ -22,6 +13,7 @@ module.exports = {
         docientasHoras = 720000000 
          // Dar rol a los usuarios cuando superen las 2 horas de voz
          
+         try {
          // Mongoose conect
          const client_mongo = new MongoClient(mongooseConnectionString);
          await client_mongo.connect();
@@ -29,10 +21,8 @@ module.exports = {
          // ***** Obtener datos de voz de cada usuario
          const collection = db.collection("djs-voice-users")
          const cursors = collection.find();
-         console.log("cursors"+cursors);
          // Referencia a servidor
-         serverGuild = interaction.guild 
-         console.log("serverGuild: "+serverGuild);
+         serverGuild = client.guilds.cache.get("311402172820619274");
          // Referencia a rol
          let voz2role = serverGuild.roles.cache.find(role => role.name === '🎇Voz [2+hr]');
          let voz5role = serverGuild.roles.cache.find(role => role.name === '💫Voz [5+hrs]');
@@ -44,7 +34,7 @@ module.exports = {
          // Recorrer cada usuario
          await cursors.forEach(cursor => {
             // obtener el usuario
-            member = serverGuild.members.cache.get(cursor.User)
+            const member = serverGuild.members.cache.get(cursor.User)
             if (member == null) return; // si el usuario no esta en el servidor
             //console.log("User: "+member.displayName);
             if (cursor.Time >= dosHoras && cursor.Time < cincoHoras){
@@ -95,75 +85,8 @@ module.exports = {
                 console.log(`No se añade rol a ${member.displayName}`)
             }            
         });
-        //                                        ws = websocket
-        interaction.followUp({ content: `Roles entregados excitosamente!` });
-    },
-};
-
-/*
-                    Dar roles a usuarios que cumplan con las horas de voz en el mes
-Cada dia a las 00:00:00 se leeran los datos de voz de cada usuario 
-y se guardaran en otra base de datos con datos de usuario y cantidad de voz registrada  en la base de datos 
-Cada día a las 00:00:00 se daran los roles a los usuarios que cumplan con las horas de voz en el mes
-
-                    
-
-*/
-
-/*
-// Schema
-const testSchema = new mongoose.Schema({
-    _id: String,
-    User: String,
-    Time: Number,
-    Guild: String,
-    __v: Number
-    });
-console.log(testSchema);
-// Model
-const test = mongoose.model('test', testSchema);
-console.log(test);
-
-const article = await test.find({Guild: '311402172820619274'});
-console.log(article);
-*/
-
-/*
-// client.user = bot
-User = interaction.member
-serverGuild = interaction.guild 
-
-const userData = await voiceClient.getUserData({guild: serverGuild, user: User});
-
-// interaction = command
-// interaction.member = user
-interaction.followUp({ 
-content: `client.user: ${client.user} 
-
-interaction.member: ${interaction.member.id}
-interaction.member.guild: ${interaction.member.guild}
-
-interaction.guild: ${interaction.guild} 
-voz2role: ${voz2role}
-`});
-*/
-
-    /*
-const Guild = interaction.guild;
-console.log(Guild);
-const User = client;
-console.log(User);
-const Member = interaction.member;
-console.log(Member);
-
-console.log(voz2role);
-const userData = voiceClient.getUserData({guild: Guild, user: User});
-
-if (userData.Time >= 7200000) {
-    User.roles.add(voz2role);
-} else {
-    User.roles.remove(voz2role);
-}
-*/
-   
-
+        client_mongo.close();
+    } catch (error) {
+        console.log(error);
+    }
+}};
